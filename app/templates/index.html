@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF--8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendor Part Numbers</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+  <style>
+    /* 1. General Body and Layout Styles */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #f8f9fa; /* Light grey background */
+        color: #212529;
+    }
+        .top-header {
+        /* Creates the blue gradient background from the screenshot */
+        background-image: linear-gradient(to right, #5b92e5, #3e7bde);
+        padding: 0.75rem 2rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .winsupply-logo {
+      max-height: 28px; /* Adjusted size for the header bar */
+    }
+    .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .search-subtitle {
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+    }
+
+    /* 2. Form and Button Styles */
+    .search-form .control.is-expanded {
+        margin-right: 1rem;
+    }
+    .button.is-winsupply-blue {
+      background-color: #0d6efd;
+      color: white;
+    }
+    .button.is-winsupply-blue:hover {
+      background-color: #0b5ed7;
+    }
+
+    /* 3. NEW Table Styles to Match Image */
+    .table-container {
+        margin-top: 2rem;
+        max-height: 70vh; /* Sets the max height to 70% of the viewport height */
+        overflow-y: auto; /* Makes this container vertically scrollable */
+    }
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+    }
+    .results-table th,
+    .results-table td {
+        padding: 1rem;
+        text-align: left;
+        font-size: 0.9rem;
+        vertical-align: middle;
+        /* Replaced full border with only a bottom border for a cleaner look */
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .results-table th {
+        background-color: white; /* Header background is now white */
+        color: #495057; /* Header text is dark grey */
+        font-weight: 600; /* Bolder header text */
+        border-bottom-width: 2px;
+
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    /* Removed the zebra-striping rule for all-white rows */
+    .sort-icon {
+        width: 1em; height: 1em;
+        margin-left: 0.25em; vertical-align: middle;
+        opacity: 0.4;
+    }
+    th:hover {
+        cursor: pointer;
+    }
+    .product-image {
+        max-width: 50px;
+        max-height: 50px;
+        border-radius: 4px;
+    }
+    
+    /* 4. Results Count Style */
+    .results-count {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    /* index.html */
+
+/* Add these new rules inside your <style> tag */
+.status-pill {
+    padding: 0.25em 0.7em;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    display: inline-block;
+    text-align: center;
+    min-width: 90px;
+    white-space: nowrap;
+}
+.status-available {
+    background-color: #dcfce7; /* Light Green */
+    color: #166534;          /* Dark Green */
+}
+.status-obsolete {
+    background-color: #fee2e2; /* Light Red */
+    color: #991b1b;          /* Dark Red */
+}
+.status-discontinued {
+    background-color: #ffedd5; /* Light Orange */
+    color: #9a3412;          /* Dark Orange */
+}
+  </style>
+</head>
+
+<body>
+      <header class="top-header">
+    <img src="https://winsupply.atlassian.net/s/vf1kch/b/0/46f435d8382f8d56274286f1ec6dafb5/_/jira-logo-scaled.png" alt="Winsupply Logo" class="winsupply-logo">
+  </header>
+    
+  <div class="page-container">
+    <h1>Vendor Part Numbers</h1>
+    <p class="search-subtitle">Search by Part Number, Keyword, Catalog, Brand, UPC, or Item Description</p>
+
+    <form id="search-form" class="field is-grouped search-form" hx-get="/search/" hx-trigger="submit, keyup changed delay:500ms from:[name='q']" hx-target="#table-wrapper">
+        <div class="control is-expanded">
+            <input class="input is-medium" type="text" name="q" placeholder="">
+        </div>
+        <div class="control">
+            <button id="print-button" class="button is-winsupply-blue is-medium" type="button">Print</button>
+        </div>
+        <div class="control">
+            <a id="export-btn" href="#" class="button is-winsupply-blue is-medium">Export CSV</a>
+        </div>
+    </form>
+
+    <div id="table-wrapper">
+        {% include 'partials/results_and_headers.html' %}
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+  <script>
+        // Print button logic (no change)
+        const printButton = document.getElementById('print-button');
+        printButton.addEventListener('click', () => { window.print(); });
+
+        // This JavaScript will now work correctly
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            const form = document.getElementById('search-form');
+            const exportBtn = document.getElementById('export-btn');
+            
+            const query = form.querySelector('[name="q"]').value;
+            const params = new URLSearchParams({ q: query });
+            
+            if (exportBtn) {
+                exportBtn.href = `{% url 'export_csv' %}?${params.toString()}`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LC-WinSearch</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+  <style>
+    /* 1. General Body and Layout Styles */
+    html {
+        background-color: #f4f4f9;
+    }
+    body {
+        font-family: sans-serif;
+        color: #333;
+    }
+    
+    /* 2. Custom Header Styles */
+    .search-header {
+      padding: 1rem 0;
+      border-bottom: 1px solid #dbdbdb;
+      margin-bottom: 2rem;
+    }
+
+    .winsupply-logo {
+      max-height: 40px; /* Control logo size */
+    }
+
+    /* 3. Custom Button Styles */
+    .button.is-winsupply-blue {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+    }
+    .button.is-winsupply-blue:hover {
+      background-color: #0069d9;
+      color: white;
+    }
+
+    /* 4. Custom Table Styles */
+    .results-table {
+        margin-top: 20px;
+    }
+
+    .results-table th,
+    .results-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .results-table th {
+        background-color: #007bff;
+        color: white;
+    }
+    
+    .results-table tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+    
+    /* 5. Print-Specific Styles */
+    @media print {
+        /* Hide everything that is not the table container when printing */
+        .search-header, .section > .container > .columns:first-child {
+            display: none;
+        }
+        .table-container {
+            display: block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        body, .section {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+    }
+  </style>
+</head>
+
+<body>
+  <section class="section">
+    <div class="container">
+      <div class="columns is-vcentered search-header">
+        <div class="column is-narrow">
+          <img src="https://winsupply.atlassian.net/s/vf1kch/b/0/46f435d8382f8d56274286f1ec6dafb5/_/jira-logo-scaled.png" alt="Winsupply Logo" class="winsupply-logo">
+        </div>
+        <div class="column">
+          <input type="text" class="input is-medium" placeholder="Search by ItemNum, ItemName..." name="q" hx-get="/search/" hx-trigger="keyup changed delay:500ms" hx-target="#results">
+        </div>
+        <div class="column is-narrow">
+            <button class="button is-winsupply-blue is-medium">Search</button>
+        </div>
+        <div class="column is-narrow">
+          <button id="print-button" class="button is-winsupply-blue is-medium">Print</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="table is-fullwidth results-table">
+          <thead>
+            <tr>
+             <th>ProductNumber</th>
+                    <th>ItemNumber</th><!--WiseItemnum-->
+                    <th>Vendor_Id</th>
+                    <th>ManufacturerName</th>
+                    <th>ItemName/Desc</th>
+                    <th>ItemStatus</th>
+                    <!-- <th>SimilarityScore</th> -->
+                    <th>ComodityNumber</th>
+            </tr>
+          </thead>
+          <tbody id="results">
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+ <script>
+    // Get the print button
+    const printButton = document.getElementById('print-button');
+
+    // Add event listener for the print button
+    printButton.addEventListener('click', () => {
+        // Use the browser's built-in print function
+        window.print();
+    });
+ </script>
+
+</body>
+</html>

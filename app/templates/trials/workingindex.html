@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winsupply Search</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-HvrKGPJagE6OFAMi2KyoZ32PSxPAeyPlSvsRczHsvr2dwEvjH/1FpDX6xEWXVHQG" crossorigin="anonymous"></script>
+    <style>
+        /* 1. General Body and Layout Styles */
+        body {
+            font-family: sans-serif;
+            max-width: 960px;
+            margin: 40px auto;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        /* 2. Header and Controls Styles */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #cccccc;
+            margin-bottom: 1rem;
+            gap: 2rem;
+        }
+
+        .winsupply-logo {
+            height: 30px;
+            width: auto;
+        }
+        
+        .search-container {
+            flex-grow: 1;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .controls button, .search-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 1rem;
+            white-space: nowrap;
+        }
+
+        .controls button:hover, .search-button:hover {
+            opacity: 0.9;
+        }
+
+        /* 3. Results Header and Table Styles */
+        .results-header {
+            margin-bottom: 20px;
+        }
+
+        .results-header h2 {
+            font-weight: bold;
+            color: #004085;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .results-table th,
+        .results-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .results-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .results-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-left">
+            <img src="https://winsupply.atlassian.net/s/vf1kch/b/0/46f435d8382f8d56274286f1ec6dafb5/_/jira-logo-scaled.png" alt="Winsupply Logo" class="winsupply-logo">
+        </div>
+        <div class="search-container">
+            <form action="{% url 'index' %}" method="GET" style="display: flex; gap: 0.5rem;">
+                <input class="search-input" type="search" name="q"
+                       placeholder="Search by Item Number, or ItemName..."
+                       value="{{ query|default:'' }}">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </div>
+        <div class="controls">
+            <button id="print-button">Print Table</button>
+        </div>
+    </header>
+
+    {% if query %}
+    <div class="results-header">
+        <h2>
+            Search Results 
+            {% if results_count %}
+                ({{ results_count }} 
+                {% if results_count == 1 %} item found{% else %} items found{% endif %})
+            {% endif %}
+        </h2>
+    </div>
+    {% endif %}
+
+    <table class="results-table">
+        <thead>
+            <tr>
+                    <th>ProductNumber</th>
+                    <th>ItemNumber</th><!--WiseItemnum-->
+                    <th>Vendor_Id</th>
+                    <th>ManufacturerName</th>
+                    <th>ItemName/Desc</th>
+                    <th>ItemStatus</th>
+                    <!-- <th>SimilarityScore</th> -->
+                    <th>ComodityNumber</th>
+            </tr>
+        </thead>
+        <tbody id="results-body">
+            {% if results %}
+                {% for result in results %}
+                    <tr>
+<!-- <td>{{ result.ItemNumber }}</td> -->
+                <td>{{ result.ProductNumber }}</td>
+                <td>{{ result.WiseItemNumber }}</td>
+                <td>{{ result.idManufacturer }}</td>
+                <td>{{ result.ManufacturerName }}</td>
+                <td>{{ result.WinItemName }}</td>
+                <!-- <td>{{ result.MainframeDescription }}</td> -->
+                <td>{{ result.ItemStatus }}</td>
+                <!-- <td>{{ result.SimilarityScore }}</td> -->
+                <td>{{ result.ComodityNumber }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                {% if query %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 2rem;">
+                        No results found for your query.
+                    </td>
+                </tr>
+                {% endif %}
+            {% endif %}
+        </tbody>
+    </table>
+
+    <script>
+        // Get the print button
+        const printButton = document.getElementById('print-button');
+
+        // Add event listener for the print button
+        printButton.addEventListener('click', () => {
+            // Use the browser's built-in print function
+            window.print();
+        });
+    </script>
+
+</body>
+</html>

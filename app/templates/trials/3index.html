@@ -1,0 +1,143 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Wingine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+</head>
+<body>
+    <div class="page-container">
+        
+        <header class="app-header">
+            <div class="logo">
+                <span class="logo-search">Search</span><span class="logo-wingine">Wingine</span>
+            </div>
+            <div class="header-right">
+                <img src="https://winsupply.atlassian.net/s/vf1kch/b/0/46f435d8382f8d56274286f1ec6dafb5/_/jira-logo-scaled.png" alt="Winsupply Logo" class="winsupply-logo">
+                <a href="#" class="header-link">Help</a>
+                <button class="theme-switcher" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <span class="icon-sun">☀️</span>
+                    <span class="icon-moon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="search-section">
+                <form class="search-form"
+                      hx-get="/search/"
+                      hx-trigger="keyup changed delay:300ms from:#search-input, submit"
+                      hx-target="#results-body"
+                      hx-indicator="#spinner">
+
+                    <label for="search-input" class="search-label">Search</label>
+                    <div class="search-input-wrapper">
+                        <input id="search-input"
+                               type="text"
+                               class="search-input"
+                               name="q"
+                               placeholder="Search for an item...">
+                    </div>
+                    <button class="button-search" type="submit">Search</button>
+                    <button class="button-clear" type="reset" onclick="document.getElementById('results-body').innerHTML = ''; document.getElementById('export-controls').innerHTML = '';">Clear</button>
+                </form>
+            </section>
+
+            <div class="results-container">
+                <div id="export-controls" class="export-controls">
+                    </div>
+                <div class="table-wrapper">
+                     <div class="htmx-indicator" id="spinner">
+                        <div class="spinner"></div>
+                    </div>
+                    <table class="results-table" id="results-data-table">
+                        <thead>
+                            <tr>
+                                <th>ITEMNUMBER</th>
+                                <th>PRODUCTNUMBER</th>
+                                <th>WISEITEMNUMBER</th>
+                                <th>IDMANUFACTURER</th>
+                                <th>MANUFACTURERNAME</th>
+                                <th>WINITEMNAME</th>
+                                <th>ITEMSTATUS</th>
+                                <th>SIMILARITYSCORE</th>
+                                <th>COMODITY</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            </tbody>
+                    </table>
+                </div>
+                 <div class="pagination-footer">
+                    <a href="#" class="pagination-link">&larr; Previous</a>
+                    <a href="#" class="pagination-link">Next &rarr;</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        // --- Theme Toggle Logic ---
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            const currentTheme = htmlEl.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            htmlEl.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark'; // Default to dark
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
+        
+        // --- Download Functions ---
+        function exportToCSV(filename) {
+            const table = document.getElementById("results-data-table");
+            if (!table || table.rows.length <= 1) { alert("No results to download."); return; }
+            let csv = [];
+            for (const row of table.rows) {
+                const rowData = [];
+                for (const cell of row.cells) {
+                    rowData.push(`"${cell.textContent.replace(/"/g, '""')}"`);
+                }
+                csv.push(rowData.join(','));
+            }
+            const csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
+            const downloadLink = document.createElement('a');
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = 'none';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+
+        function exportToPDF() {
+            const table = document.getElementById("results-data-table");
+            if (!table || table.rows.length <= 1) { alert("No results to download."); return; }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+
+            doc.setFontSize(18);
+            doc.text("Search Wingine Results", 14, 20);
+            
+            doc.autoTable({ 
+                html: '#results-data-table', 
+                theme: 'grid',
+                startY: 25 
+            });
+            doc.save('search-results.pdf');
+        }
+    </script>
+</body>
+</html>

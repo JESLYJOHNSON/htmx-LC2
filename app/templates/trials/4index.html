@@ -1,0 +1,195 @@
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Table View</title>
+    <style>
+        /* 1. CSS Variables for Theming */
+        :root {
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --bg-color: #ffffff;
+            --text-color: #2c3e50;
+            --text-color-secondary: #555;
+            --border-color: #e0e0e0;
+            --header-bg-color: #f8f9fa;
+            --row-alt-bg-color: #f8f9fa;
+            --button-bg-color: #3498db;
+            --button-text-color: #ffffff;
+            --header-border-bottom: #cccccc;
+        }
+
+        /* Dark Theme Overrides */
+        body.dark-mode {
+            --bg-color: #2c3e50;
+            --text-color: #ecf0f1;
+            --text-color-secondary: #999;
+            --border-color: #4b6584;
+            --header-bg-color: #34495e;
+            --row-alt-bg-color: #34495e;
+            --button-bg-color: #5dade2;
+            --header-border-bottom: #566573;
+        }
+
+        /* 2. General Styles */
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 3. Header and Controls */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--header-border-bottom);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: bold;
+        }
+
+        .controls button {
+            background-color: var(--button-bg-color);
+            color: var(--button-text-color);
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .controls button:hover {
+            opacity: 0.9;
+        }
+
+        /* 4. Table Styles */
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* For responsiveness on small screens */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        thead {
+            background-color: var(--header-bg-color);
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: var(--row-alt-bg-color);
+        }
+
+        /* 5. Print-Specific Styles */
+        @media print {
+            /* Hide everything except the table container when printing */
+            body > *:not(.table-container) {
+                display: none;
+            }
+
+            /* Ensure the table container takes up the full space */
+            .table-container {
+                margin: 0;
+                padding: 0;
+            }
+
+             /* Optional: Remove padding for tighter print layout */
+            body {
+                padding: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+         <div class="header-right">
+                <img src="https://winsupply.atlassian.net/s/vf1kch/b/0/46f435d8382f8d56274286f1ec6dafb5/_/jira-logo-scaled.png" alt="Winsupply Logo" class="winsupply-logo">
+               </div>
+        <div class="controls">
+            <button id="theme-switcher">Toggle Theme</button>
+            <button id="print-button">Print Table</button>
+        </div>
+    </header>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ItemNumber</th>
+                    <th>ProductNumber</th>
+                    <th>WiseItemNumber</th>
+                    <th>idManufacturer</th>
+                    <th>ManufacturerName</th>
+                    <th>WinItemName</th>
+                    <th>ItemStatus</th>
+                    <th>SimilarityScore</th>
+                    <th>ComodityNumber</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if results %}
+                    {% for row in results %}
+                        <tr>
+                            <td>{{ row.0 }}</td>
+                            <td>{{ row.1 }}</td>
+                            <td>{{ row.2 }}</td>
+                            <td>{{ row.3 }}</td>
+                            <td>{{ row.4 }}</td>
+                            <td>{{ row.5 }}</td>
+                            <td>{{ row.6 }}</td>
+                            <td>{{ row.7 }}</td>
+                            <td>{{ row.8 }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 2rem; color: var(--text-color-secondary);">No data to display.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Get the buttons
+        const themeSwitcher = document.getElementById('theme-switcher');
+        const printButton = document.getElementById('print-button');
+
+        // Add event listener for the theme switcher
+        themeSwitcher.addEventListener('click', () => {
+            // Toggle the 'dark-mode' class on the body
+            document.body.classList.toggle('dark-mode');
+        });
+
+        // Add event listener for the print button
+        printButton.addEventListener('click', () => {
+            // Use the browser's built-in print function
+            window.print();
+        });
+    </script>
+
+</body>
+</html> -->

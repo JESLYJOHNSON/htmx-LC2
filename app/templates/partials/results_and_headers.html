@@ -1,0 +1,99 @@
+<div class="table-container">
+    <table class="table is-fullwidth results-table">
+        {% if results %}
+    <p class="results-count">{{ results|length }} results found</p>
+{% endif %}
+        <thead>
+            <tr>
+                <th hx-get="/search/?sort=WiseItemNumber&direction={{ next_direction }}" hx-include="[name='q']" hx-target="#table-wrapper">
+                    <span>Item 
+                        Number</span>
+                    <svg class="sort-icon" viewBox="0 0 320 512"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path></svg>
+                </th>
+                <th hx-get="/search/?sort=ManufacturerName&direction={{ next_direction }}" hx-include="[name='q']" hx-target="#table-wrapper">
+                    <span>Manufacturer</span>
+                    <svg class="sort-icon" viewBox="0 0 320 512"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path></svg>
+                </th>
+                <th hx-get="/search/?sort=WinItemName&direction={{ next_direction }}" hx-include="[name='q']" hx-target="#table-wrapper">
+                    <span>Item Name</span>
+                    <svg class="sort-icon" viewBox="0 0 320 512"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path></svg>
+                </th>
+                <th hx-get="/search/?sort=MainframeDescription&direction={{ next_direction }}" hx-include="[name='q']" hx-target="#table-wrapper">
+                    <span>Description</span>
+                    <svg class="sort-icon" viewBox="0 0 320 512"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path></svg>
+                </th>
+                <th hx-get="/search/?sort=VENDOR_NUMBER&direction={{ next_direction }}" hx-include="[name='q']" hx-target="#table-wrapper">
+                    <span>Vendor
+                        Number
+                    </span>
+                    <svg class="sort-icon" viewBox="0 0 320 512"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path></svg>
+                </th>
+                <th hx-get="/search/?sort=VENDOR_ITEM_NUMBER&direction={{ next_direction }}" hx-include="[name='q']" hx-target="#table-wrapper">
+                    <span>Vendor 
+                        Part Number</span>
+                    <svg class="sort-icon" viewBox="0 0 320 512"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path></svg>
+                </th>
+                <th hx-get="/search/?sort=CatalogNnumber&direction={{ next_direction }}" hx-include="[name='q']" hx-target="#table-wrapper">
+                    <span>Catalog 
+                        Number</span>
+                    <svg class="sort-icon" viewBox="0 0 320 512"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path></svg>
+                </th>
+                <th hx-get="/search/?sort=UPC&direction={{ next_direction }}" hx-include="[name='q']" hx-target="#table-wrapper">
+                    <span>UPC</span>
+                    <svg class="sort-icon" viewBox="0 0 320 512"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path></svg>
+                </th>
+                <th hx-get="/search/?sort=ComodityNumber&direction={{ next_direction }}" hx-include="[name='q']" hx-target="#table-wrapper">
+                    <span>Comodity 
+                        Group</span>
+                    <svg class="sort-icon" viewBox="0 0 320 512"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path></svg>
+                </th>
+                <th hx-get="/search/?sort=ItemStatus&direction={{ next_direction }}" hx-include="[name='q']" hx-target="#table-wrapper">
+                    <span>Item 
+                        Status</span>
+                    <svg class="sort-icon" viewBox="0 0 320 512"><path fill="currentColor" d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path></svg>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in results %}
+            <tr>
+                <td>{{ item.WiseItemNumber }}</td>
+                <td>{{ item.ManufacturerName }}</td>
+                <td>
+                    <a href="#" 
+                       hx-get="/search/?commodity_search={{ item.ComodityNumber }}"
+                       hx-target="#table-wrapper"
+                       hx-indicator="body"
+                       style="color: #0d6efd; text-decoration: underline; cursor: pointer;">
+                        {{ item.WinItemName }}
+                    </a>
+                </td>
+                <td>{{ item.MainframeDescription }}</td>
+                <td>{{ item.VENDOR_NUMBER }}</td>
+                <td>{{ item.VENDOR_ITEM_NUMBER }}</td>
+                <td>{{ item.CatalogNnumber }}</td>
+                <td>{{ item.UPC }}</td>
+                <td>{{ item.ComodityNumber }}</td>
+                <td>
+                    {% if item.ItemStatus == 'A' %}
+                        <span class="status-pill status-available">Active</span>
+                    {% elif item.ItemStatus == 'O' %}
+                        <span class="status-pill status-obsolete">Obsolete</span>
+                    {% elif item.ItemStatus == 'N' %}
+                        <span class="status-pill status-discontinued">Not listed</span>
+                    {% elif item.ItemStatus == 'D' %}
+                        <span class="status-pill status-discontinued">Discontinued</span>
+                    {% else %}
+                        {{ item.ItemStatus }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9" class="has-text-centered">No results found for your query.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+

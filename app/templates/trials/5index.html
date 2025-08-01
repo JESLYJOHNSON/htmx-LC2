@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LC-WinSearch</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+  <style>
+    /* 1. General Body and Layout Styles */
+    html {
+        /* Sets the slight grey background for the whole page */
+        background-color: #f5f7fa;
+    }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #333;
+    }
+
+    /* 2. New Top Header Styles */
+    .top-header {
+        /* Creates the blue gradient background from the screenshot */
+        background-image: linear-gradient(to right, #5b92e5, #3e7bde);
+        padding: 0.75rem 2rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .winsupply-logo {
+      max-height: 28px; /* Adjusted size for the header bar */
+    }
+
+    /* 3. Main Content Styles */
+    .search-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    
+    /* 4. Custom Button Styles */
+    .button.is-winsupply-blue {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+    }
+    .button.is-winsupply-blue:hover {
+      background-color: #0069d9;
+    }
+
+    /* 5. Custom Table Styles */
+    .results-table {
+        margin-top: 20px;
+    }
+    .results-table th,
+    .results-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+    .results-table th {
+        background-color: #007bff;
+        color: white !important;
+    }
+    .results-table tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+    .sort-icon {
+        width: 1em; height: 1em;
+        margin-left: 0.5em; vertical-align: middle;
+        opacity: 0.6;
+    }
+    th:hover .sort-icon {
+        opacity: 1; cursor: pointer;
+    }
+    
+    /* 6. Print-Specific Styles */
+    @media print {
+        .top-header, .search-container { display: none; }
+        .table-container { display: block !important; margin: 0 !important; padding: 0 !important; }
+        body, .section { margin: 0 !important; padding: 0 !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="top-header">
+    <img src="https://winsupply.atlassian.net/s/vf1kch/b/0/46f435d8382f8d56274286f1ec6dafb5/_/jira-logo-scaled.png" alt="Winsupply Logo" class="winsupply-logo">
+  </header>
+  
+  <section class="section">
+    <div class="container">
+      <div class="box search-container">
+        
+        <h2 class="title is-4">Search for a Product</h2>
+        <p class="subtitle is-6">Search by Part Number, Keyword, Category, Brand, UPC, or Item Description</p>
+        
+        <form class="field is-grouped" hx-get="/search/" hx-trigger="submit, keyup changed delay:500ms from:[name='q']" hx-target="#results">
+          <div class="control is-expanded">
+            <input class="input is-medium" type="text" name="q" placeholder="">
+          </div>
+          <div class="control">
+            <button class="button is-winsupply-blue is-medium" type="submit">Search</button>
+          </div>
+          <div class="control">
+            <button id="print-button" class="button is-winsupply-blue is-medium" type="button">Print</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-container">
+        <table class="table is-fullwidth results-table">
+          <thead>
+            <tr>
+              <th>ProductNumber <svg class="sort-icon" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M1408 1088q0 26-19 45l-448 448q-19 19-45 19t-45-19l-448-448q-19-19-19-45t19-45 45-19h896q26 0 45 19t19 45zm0-384q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"/></svg></th>
+              <th>ItemNumber <svg class="sort-icon" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M1408 1088q0 26-19 45l-448 448q-19 19-45 19t-45-19l-448-448q-19-19-19-45t19-45 45-19h896q26 0 45 19t19 45zm0-384q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"/></svg></th>
+              <th>Vendor_Id <svg class="sort-icon" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M1408 1088q0 26-19 45l-448 448q-19 19-45 19t-45-19l-448-448q-19-19-19-45t19-45 45-19h896q26 0 45 19t19 45zm0-384q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"/></svg></th>
+              <th>ManufacturerName <svg class="sort-icon" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M1408 1088q0 26-19 45l-448 448q-19 19-45 19t-45-19l-448-448q-19-19-19-45t19-45 45-19h896q26 0 45 19t19 45zm0-384q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"/></svg></th>
+              <th>ItemName/Desc <svg class="sort-icon" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M1408 1088q0 26-19 45l-448 448q-19 19-45 19t-45-19l-448-448q-19-19-19-45t19-45 45-19h896q26 0 45 19t19 45zm0-384q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"/></svg></th>
+              <th>ItemStatus <svg class="sort-icon" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M1408 1088q0 26-19 45l-448 448q-19 19-45 19t-45-19l-448-448q-19-19-19-45t19-45 45-19h896q26 0 45 19t19 45zm0-384q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"/></svg></th>
+            </tr>
+          </thead>
+          <tbody id="results">
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+ <script>
+    const printButton = document.getElementById('print-button');
+    printButton.addEventListener('click', () => {
+        window.print();
+    });
+ </script>
+
+</body>
+</html>
